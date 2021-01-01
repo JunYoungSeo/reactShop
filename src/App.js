@@ -1,7 +1,11 @@
+/* eslint-disable */
 import { useState } from 'react';
 import { Navbar, Nav, NavDropdown, Form, FormControl, Button, Jumbotron } from 'react-bootstrap';
 import './App.css';
 import Data from './data.js';
+import Detail from './Detail.js';
+
+import { Link, Route, Switch } from 'react-router-dom';
 
 function App() {
 
@@ -14,8 +18,8 @@ function App() {
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="ml-auto">
-            <Nav.Link href="#home">Home</Nav.Link>
-            <Nav.Link href="#link">Link</Nav.Link>
+            <Nav.Link> <Link to="/">Home</Link> </Nav.Link>
+            <Nav.Link> <Link to="/detail">Detail</Link> </Nav.Link>
             <NavDropdown title="Dropdown" id="basic-nav-dropdown">
               <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
               <NavDropdown.Item href="#action/3.2">Another action</NavDropdown.Item>
@@ -27,41 +31,60 @@ function App() {
         </Navbar.Collapse>
       </Navbar>
 
-      <Jumbotron className="background">
-        <h1>20% Season OFF</h1>
-        <p>
-          This is a simple hero unit, a simple jumbotron-style component for calling
-          extra attention to featured content or information.
-        </p>
-        <p>
-          <Button variant="primary">Learn more</Button>
-        </p>
-      </Jumbotron>
-
-      <div className="container">
-        <div className="row">
-          <div className="col-md-4">
-            <img src="https://codingapple1.github.io/shop/shoes1.jpg" width="100%" />
-            <h4>{ shoes[0].title }</h4>
-            <p>{ shoes[0].content + " " + shoes[0].price }</p>
-          </div>
-          <div className="col-md-4">
-            <img src="https://codingapple1.github.io/shop/shoes2.jpg" width="100%" />
-            <h4>{ shoes[1].title }</h4>
-            <p>{ shoes[1].content + " " + shoes[1].price }</p>
-          </div>
-          <div className="col-md-4">
-            <img src="https://codingapple1.github.io/shop/shoes3.jpg" width="100%" />
-            <h4>{ shoes[2].title }</h4>
-            <p>{ shoes[2].content + " " + shoes[2].price }</p>
+      <Switch>
+      <Route exact path="/">
+        <Jumbotron className="background">
+          <h1>20% Season OFF</h1>
+          <p>
+            This is a simple hero unit, a simple jumbotron-style component for calling
+            extra attention to featured content or information.
+          </p>
+          <p>
+            <Button variant="primary">Learn more</Button>
+          </p>
+        </Jumbotron>
+        <div className="container">
+          <div className="row">
+            {
+              shoes.map((id, i)=>{
+                return (
+                  <Card shoes={id} i={i+1} key={i}/>
+                )
+              })
+            }
           </div>
         </div>
+      </Route>
 
 
-      </div>
+      <Route path="/detail/:id">
+        <Detail shoes={shoes} />
+      </Route>
+
+      <Route path="/:id">
+        <div>아무거나 적었을때 이거 보여주셈</div>
+      </Route>
+      </Switch>
+      {/* <Route path="/broa" component={Modal}></Route> */}
+
+      
 
     </div>
   );
 }
+
+function Card(props){
+  return(
+    <div className="col-md-4">
+      <Link to={'/detail/' + props.shoes.id}>
+        <img src={'https://codingapple1.github.io/shop/shoes' + (props.i) + '.jpg'} width="100%" />
+        <h4>{ props.shoes.title }</h4>
+        <p>{ props.shoes.content } & { props.shoes.price }</p>
+      </Link>
+    </div>
+  )
+}
+
+
 
 export default App;
